@@ -3,8 +3,8 @@
 A query engine that uses Retrieval Augmented Generation (RAG) to answer questions about a text.
 
 ```mermaid
-flowchart TD
-	A[Deploy to Production] --> B{Is it Friday};
+flowchart LR
+	id1(Text in the box);
 
 ```
 
