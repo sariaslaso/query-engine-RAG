@@ -6,8 +6,11 @@ A query engine that uses Retrieval Augmented Generation (RAG) to answer question
 flowchart RL
 	id1(Text document) --> id2([Embedding Model]);
 	id2 --> id3@{ shape: hex, label: "Text Embeddings"};
-	id3 --> id4[(Vector DB)]
+	
 ```
-
+```mermaid
+flowchart BT
+	id3 --> id4[(Vector DB)];
+```
 
 Extended description coming soon!
