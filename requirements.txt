@@ -1,3 +1,4 @@
 spacy
 FlagEmbedding
 elasticsearch[async]
+tqdm
