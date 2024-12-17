@@ -4,7 +4,7 @@ A query engine that uses Retrieval Augmented Generation (RAG) to answer question
 
 ```mermaid
 flowchart LR
-	id1(Text in the box);
+	id1(Text document) --> id2([Embedding Model]);
 
 ```
 
