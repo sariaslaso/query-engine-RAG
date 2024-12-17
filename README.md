@@ -10,6 +10,7 @@ flowchart RL
 	id5(Query) --> id6([Embedding Model]);
 	id6 --> id7@{ shape: hex, label: "Query Embeddings"};
 	id7 --> id4;
+	id4 --> id8@{ shape: docs, label: "Query + Context"};
 ```
 
 Extended description coming soon!
