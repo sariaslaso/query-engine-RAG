@@ -4,20 +4,6 @@ A query engine that uses Retrieval Augmented Generation (RAG) to answer question
 
 ```mermaid
 flowchart LR
-	id1(Text document) --> id2([Embedding Model]);
-	id2 --> id3@{ shape: hex, label: "Text Embeddings"};
-	id3 --> id4[(Vector DB)];
-	id5(Query) --> id6([Embedding Model]);
-	id6 --> id7@{ shape: hex, label: "Query Embeddings"};
-	id7 --> id4;
-	id4 -- knn search --> id8@{ shape: docs, label: "Query + Context"};
-	id8 --> id9@{ shape: circle, label: "LLM"};
-	id9 --> id10(Response);
-```
-
-
-```mermaid
-flowchart LR
 	User -- InputText --> InputData 
 	User -- Query --> InputData
 
@@ -48,7 +34,7 @@ flowchart LR
 		id4 -- index --> id7
 	end
 
-	id9 --> id10@{shape: circle, label: "LLM"}
+	id9 --> id10((LLM))
 	id10 --> id11(Response)
 	id11 --> User
 
