@@ -24,7 +24,8 @@ flowchart LR
 		InputData
 	end
 	InputData -- Text --> Split
-	InputData -- Query --> Embed_query
+	InputData -- Query --> id1(Embedding Model)
+	
 
 	subgraph RAG
 		direction TB
@@ -34,7 +35,8 @@ flowchart LR
 		end
 		subgraph Query
 			direction TB
-			Embed_query --> Search
+			id1 --> id2@{shape: hex, label: "Query embedding vector"}
+			id2 -- knnSearch --> Content
 		end
 	end
 ```
