@@ -15,4 +15,28 @@ flowchart LR
 	id9 --> id10(Response);
 ```
 
+
+```mermaid
+flowchart LR
+	User -- InputText --> InputData 
+	User -- Query --> InputData
+	subgraph UI
+		InputData
+	end
+	InputData -- Text --> Split
+	InputData -- Query --> Embed_query
+
+	subgraph RAG
+		direction TB
+		subgraph Text
+			direction TB
+			Split --> Embed_chunks --> Index
+		end
+		subgraph Query
+			direction TB
+			Embed_query --> Search
+		end
+	end
+```
+
 Extended description coming soon!
