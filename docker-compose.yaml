@@ -28,7 +28,6 @@ services:
          - "transport.host=127.0.0.1"
          - "cluster.name=docker-cluster"
          - "xpack.security.enabled=false"
-
       ports:
          - "9200:9200"
          - "9300:9300"
@@ -37,3 +36,11 @@ services:
          interval: 10s
          timeout: 10s
          retries: 10
+
+   querysearch:
+      container_name: querysearch
+      build:
+         context: FastAPI/
+         dockerfile: Dockerfile
+      ports:
+         - "80:80"
