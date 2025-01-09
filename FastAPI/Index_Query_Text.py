@@ -143,5 +143,48 @@ class IndexText:
 
             sentences = []
             chunks = []
+            
 
-    
+class IndexQuery:
+
+    def __init__(self, client, model):
+        # Python client for Elasticsearch
+        self.client = client
+        self.model = model
+
+    def __embedQueries(self, queries):
+        # queries: list of text queries
+        # returns a list of vector embeddings for each query 
+        q_embeddings = self.model.encode_queries(queries)
+
+        return q_embeddings.tolist()[0]
+
+    async def knnSearch(self, index_name, queries):
+        # index_name: str
+        # queries: list of text queries
+        
+        query_vector = self.__embedQueries(queries)
+        score_chunk = []
+        
+        resp_knn = await self.client.search(
+            index = index_name,
+            # size = 3,  # number of top global results after combining shard results
+            query = {
+                "knn": {
+                    "field": "embedding_vector",
+                    "query_vector": query_vector,
+                    "k": 10,  # nearest neighbours to return from each shard
+                    "num_candidates": 100,  # number of nearest neighbor candidates to consider per shard while doing knn search
+                }
+            },
+        )
+
+        # return scores and chunks as tuples in a list
+        
+        for hit in resp_knn["hits"]["hits"]:
+            score_chunk.append({"score": hit["_score"], "chunk": hit["_source"]["chunk"]})
+            # score_chunk.append((hit["_score"], hit["_source"]["chunk"]))
+            # print(hit["_score"], hit["_source"]["chunk"])
+            # print()
+
+        return score_chunk

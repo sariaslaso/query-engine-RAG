@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+spacy
+FlagEmbedding
+elasticsearch
+sentencepiece
