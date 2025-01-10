@@ -16,7 +16,7 @@ def remove_newline(text):
 
     return text
 
-def embed_index_text(text_chunks, client):
+def embed_index_text(text_chunks, client, model):
     # chunks: list of m elements that contain n sentences each
     # client: instance of Elasticsearch client used to create the index
 
@@ -75,11 +75,13 @@ class IndexText:
     # __preProcessInput: reads a text from a file_path, and splits the text into paragraphs eliminating newline characters
     # chunkEmbedIndex: splits the pre-processed text into chunks and indexes the chunks using Elasticsearch
     
-    def __init__(self, client):
+    def __init__(self, client, model):
         # instance variables defined below
         
         # elastic search client
         self.client = client
+        # embedding model
+        self.model = model
 
     def __preProcessInput(self, file_path):
         # text: text file
@@ -129,7 +131,7 @@ class IndexText:
 
                 if len(chunks) == chunk_limit:
                     # embed and index
-                    embed_index_text(chunks, self.client)
+                    embed_index_text(chunks, self.client, self.model)
 
                     # clear list of chunks
                     chunks = []

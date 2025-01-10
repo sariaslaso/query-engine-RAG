@@ -42,5 +42,7 @@ services:
       build:
          context: FastAPI/
          dockerfile: Dockerfile
+      volumes:
+         - ./data:/code/data
       ports:
          - "80:80"

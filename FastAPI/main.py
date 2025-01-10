@@ -6,9 +6,10 @@ from contextlib import asynccontextmanager
 #sys.path.append('..')
 
 
-from Index_Query_Text import IndexQuery
+from Index_Query_Text import createIndex, IndexQuery, IndexText
 from FlagEmbedding import FlagModel
 from elasticsearch import AsyncElasticsearch
+from elasticsearch.helpers import async_bulk
 
 model = None
 client = None
@@ -25,6 +26,8 @@ async def lifespan(app: FastAPI):
 	model = FlagModel('BAAI/bge-small-zh-v1.5', use_fp16 = True)
 	# load Elasticsearch client
 	client = AsyncElasticsearch("http://elasticsearch:9200")
+
+	index_text = IndexText(client, model)
 	index_search = IndexQuery(client, model)
 	yield
 	model = None
@@ -38,6 +41,7 @@ class IndexQueryRequest(BaseModel):
 
 	index_name : str
 	query : list[str]
+	text_path : str
 
 class Hit(BaseModel):
 
@@ -53,6 +57,18 @@ async def health_check():
 
 	return {"working" : "yes"}
 
+# this function creates the index and indexes the text
+@app.post("/index", response_model = dict[str, str])
+async def create_index(request: IndexQueryRequest):
+
+	name = request.index_name
+
+	createIndex(client, name)
+
+	# return {"index_exists": "True"}
+
+
+# this function answers queries
 @app.post("/search", response_model = IndexQueryResponse)
 async def answer_query(request: IndexQueryRequest):
 
