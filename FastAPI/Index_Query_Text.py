@@ -16,7 +16,7 @@ def remove_newline(text):
 
     return text
 
-def embed_index_text(text_chunks, client, model):
+async def embed_index_text(text_chunks, client, index_name, model):
     # chunks: list of m elements that contain n sentences each
     # client: instance of Elasticsearch client used to create the index
 
@@ -27,7 +27,7 @@ def embed_index_text(text_chunks, client, model):
     docs = [
         {
             '_op_type': 'index',
-            '_index': 'les_miserables_index',
+            '_index': index_name,
             '_source': {
                 "chunk" : t, 
                 "embedding_vector" : v
@@ -36,7 +36,8 @@ def embed_index_text(text_chunks, client, model):
     ]
     
     # index in bulk
-    res = helpers.bulk(client, docs)
+    # res = helpers.bulk(client, docs)
+    res = await async_bulk(client, docs)
     # print(res)
 
 def createIndex(client, index_name):
@@ -97,7 +98,7 @@ class IndexText:
 
         return text
 
-    def chunkEmbedIndex(self, file_path, sentence_limit, chunk_limit, min_characters):
+    async def chunkEmbedIndex(self, file_path, index_name, sentence_limit, chunk_limit, min_characters):
         text = self.__preProcessInput(file_path)
         
         # Load pretrained English Language Model to separate the text into sentences
@@ -131,7 +132,7 @@ class IndexText:
 
                 if len(chunks) == chunk_limit:
                     # embed and index
-                    embed_index_text(chunks, self.client, self.model)
+                    await embed_index_text(chunks, self.client, index_name, self.model)
 
                     # clear list of chunks
                     chunks = []
@@ -141,7 +142,7 @@ class IndexText:
             # append sentences to remaining chunks
             chunks.append(" ".join(sentences))
 
-            embed_index_text(chunks, self.client)
+            await embed_index_text(chunks, self.client, index_name, self.model)
 
             sentences = []
             chunks = []

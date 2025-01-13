@@ -14,27 +14,33 @@ from elasticsearch.helpers import async_bulk
 model = None
 client = None
 index_search = None
+index_text = None
 
 # executes the code before the yield at startup, 
 # and the code after the yield at shutdown
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-	global model, client, index_search
+	global model, client, index_search, index_text
 
 	# load the embedding model
 	model = FlagModel('BAAI/bge-small-zh-v1.5', use_fp16 = True)
+
 	# load Elasticsearch client
 	client = AsyncElasticsearch("http://elasticsearch:9200")
 
+	# instantiate IndexText and IndexQuery objects
 	index_text = IndexText(client, model)
 	index_search = IndexQuery(client, model)
+
 	yield
+
 	model = None
 	await client.close()
 
 
 app = FastAPI(lifespan = lifespan)
+
 
 #declaring data models
 class IndexQueryRequest(BaseModel):
@@ -42,6 +48,11 @@ class IndexQueryRequest(BaseModel):
 	index_name : str
 	query : list[str]
 	text_path : str
+
+	# chunk parameters
+	sentence_limit : int
+	chunk_limit : int
+	min_characters : int
 
 class Hit(BaseModel):
 
@@ -57,18 +68,24 @@ async def health_check():
 
 	return {"working" : "yes"}
 
-# this function creates the index and indexes the text
+# creates the index and indexes the text
 @app.post("/index", response_model = dict[str, str])
 async def create_index(request: IndexQueryRequest):
 
 	name = request.index_name
+	path_to_text = request.text_path
+
+	sentence_limit = request.sentence_limit
+	chunk_limit = request.chunk_limit
+	min_characters = request.min_characters
 
 	createIndex(client, name)
 
+	res = await index_text.chunkEmbedIndex(path_to_text, name, sentence_limit, chunk_limit, min_characters)
+
 	# return {"index_exists": "True"}
 
-
-# this function answers queries
+# answers queries
 @app.post("/search", response_model = IndexQueryResponse)
 async def answer_query(request: IndexQueryRequest):
 
