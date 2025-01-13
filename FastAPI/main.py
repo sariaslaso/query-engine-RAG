@@ -63,13 +63,19 @@ class IndexQueryResponse(BaseModel):
 
 	knn_res : list[Hit]
 
+class IndexTextResponse(BaseModel):
+
+	chunk_count : int
+
+
 @app.get("/status", response_model = dict[str, str])
 async def health_check():
 
 	return {"working" : "yes"}
 
+
 # creates the index and indexes the text
-@app.post("/index", response_model = dict[str, str])
+@app.post("/index", response_model = IndexTextResponse)
 async def create_index(request: IndexQueryRequest):
 
 	name = request.index_name
@@ -83,7 +89,8 @@ async def create_index(request: IndexQueryRequest):
 
 	res = await index_text.chunkEmbedIndex(path_to_text, name, sentence_limit, chunk_limit, min_characters)
 
-	# return {"index_exists": "True"}
+	return {"chunk_count": res}
+
 
 # answers queries
 @app.post("/search", response_model = IndexQueryResponse)

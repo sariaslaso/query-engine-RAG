@@ -107,6 +107,8 @@ class IndexText:
         chunks = []
         sentences = []
 
+        indexed_chunk_count = 0
+
         # generate doc pipeline with nlp
         # allows to process the data as a stream and buffer the paragraphs in batches instead of one by one
         doc_pipeline = nlp.pipe(text, batch_size = 5, n_process = 1)
@@ -134,6 +136,8 @@ class IndexText:
                     # embed and index
                     await embed_index_text(chunks, self.client, index_name, self.model)
 
+                    indexed_chunk_count += len(chunks)
+
                     # clear list of chunks
                     chunks = []
 
@@ -144,8 +148,12 @@ class IndexText:
 
             await embed_index_text(chunks, self.client, index_name, self.model)
 
+            indexed_chunk_count += len(chunks)
+
             sentences = []
             chunks = []
+
+        return indexed_chunk_count
             
 
 class IndexQuery:
