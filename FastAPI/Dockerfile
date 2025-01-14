@@ -8,6 +8,7 @@ COPY ./requirements.txt /code/requirements.txt
 
 # install the package dependencies in the requirements.txt file
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN python -m spacy download en_core_web_sm
 
 # copy the model, tokenizer and classifier class to the "/code" directory
 COPY ./Index_Query_Text.py /code/Index_Query_Text.py

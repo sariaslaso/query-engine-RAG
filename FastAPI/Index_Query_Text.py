@@ -1,7 +1,6 @@
 import spacy
-from FlagEmbedding import FlagModel
-from elasticsearch import Elasticsearch
-from elasticsearch import helpers
+from elasticsearch import AsyncElasticsearch
+from elasticsearch.helpers import async_bulk
 
 from tqdm import tqdm
 

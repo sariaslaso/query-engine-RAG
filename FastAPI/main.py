@@ -8,8 +8,7 @@ from contextlib import asynccontextmanager
 
 from Index_Query_Text import createIndex, IndexQuery, IndexText
 from FlagEmbedding import FlagModel
-from elasticsearch import AsyncElasticsearch
-from elasticsearch.helpers import async_bulk
+
 
 model = None
 client = None
@@ -49,9 +48,9 @@ class IndexTextRequest(BaseModel):
 	text_path : str
 
 	# chunk parameters
-	sentence_limit : int | None = None
-	chunk_limit : int | None = None
-	min_characters : int | None = None
+	sentence_limit : int
+	chunk_limit : int
+	min_characters : int
 
 class IndexQueryRequest(BaseModel):
 
@@ -93,7 +92,7 @@ async def create_index(request: IndexTextRequest):
 
 	res = await index_text.chunkEmbedIndex(path_to_text, name, sentence_limit, chunk_limit, min_characters)
 
-	return {"chunk_count": res}
+	return {"chunk_count" : res}
 
 
 # answers queries
@@ -109,6 +108,7 @@ async def answer_query(request: IndexQueryRequest):
 
 # curl -X POST "http://0.0.0.0:80/search" -d '{"query" : ["how old is the bishop when he dies?"], "index_name" : "les_miserables_index"}' -H "content-type:application/json" | python3 -m json.tool
 
+# curl -X POST "http://0.0.0.0:80/index" -d '{"text_path" : "./data/LesMiserables_short.txt", "index_name" : "les_miserables_index", "sentence_limit" : 6, "chunk_limit" : 64, "min_characters" : 128}' -H "content-type:application/json" | python3 -m json.tool
 
 
 
