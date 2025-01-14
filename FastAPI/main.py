@@ -43,16 +43,20 @@ app = FastAPI(lifespan = lifespan)
 
 
 #declaring data models
+class IndexTextRequest(BaseModel):
+
+	index_name : str
+	text_path : str
+
+	# chunk parameters
+	sentence_limit : int | None = None
+	chunk_limit : int | None = None
+	min_characters : int | None = None
+
 class IndexQueryRequest(BaseModel):
 
 	index_name : str
 	query : list[str]
-	text_path : str
-
-	# chunk parameters
-	sentence_limit : int
-	chunk_limit : int
-	min_characters : int
 
 class Hit(BaseModel):
 
@@ -76,7 +80,7 @@ async def health_check():
 
 # creates the index and indexes the text
 @app.post("/index", response_model = IndexTextResponse)
-async def create_index(request: IndexQueryRequest):
+async def create_index(request: IndexTextRequest):
 
 	name = request.index_name
 	path_to_text = request.text_path
