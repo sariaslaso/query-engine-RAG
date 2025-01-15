@@ -59,6 +59,44 @@ docker compose -f docker-compose.yaml up
 ```
 , which spins up a network with 3 containers `jupyter`, `elasticsearch`, and `querysearch`.
 
+In order to use the app, one can run the command
+```
+curl -X POST "http://0.0.0.0:80/index" -d '{"text_path" : "./data/LesMiserables_short.txt", "index_name" : "les_miserables_index", "sentence_limit" : 6, "chunk_limit" : 64, "min_characters" : 128}' -H "content-type:application/json" | python3 -m json.tool
+```
+to build a vectorDB (named `index_name`) using the text found inside the `text_path`, and setting the parameters that define how the text will be split into chunks and indexed in batches (`sentence_limit`, `chunk_limit`,  and `min_characters`).
+
+Additionally, a query search can be implemented by running the following request
+```
+curl -X POST "http://0.0.0.0:80/search" -d '{"query" : ["how old is the bishop when he dies?"], "index_name" : "les_miserables_index"}' -H "content-type:application/json" | python3 -m json.tool
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
