@@ -4,7 +4,7 @@ A query engine that uses Retrieval Augmented Generation (RAG) to assist LLMS in 
 
 ## How the app works
 
-The user provides an input text and a query about this text to the user interface (UI). The text is read, processed, and split into sentences using the spaCy trained pipeline <en_core_web_sm>, an English pipeline trained on written web text, in order to preserve the semantics.
+The user provides an input text and a query about this text to the user interface (UI). The text is read, processed, and split into sentences using the spaCy trained pipeline [en_core_web_sm](https://spacy.io/models/en), an English pipeline trained on written web text, in order to preserve the semantics.
 
 
 
