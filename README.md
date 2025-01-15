@@ -47,9 +47,17 @@ flowchart LR
 
 ```
 
+## FastAPI and Docker container
 
-
-
+A Docker image of the application can be built using the files `docker-compose.yaml`, `Dockerfile`, `requirements.txt`, and the files contained at `FastAPI/` which contain the necessary code to process the text, create vector embeddings, indexing and carry out a kNN search in the vectorDB. In order to run the Docker containers to build the vectorDB (index) from the input text, and carry out a search given a query one can run the commands
+```
+docker compose -f docker-compose.yaml build
+```
+and 
+```
+docker compose -f docker-compose.yaml up
+```
+, which spins up a network with 3 containers `jupyter`, `elasticsearch`, and `querysearch`.
 
 
 
