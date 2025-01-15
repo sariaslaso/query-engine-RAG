@@ -1,6 +1,12 @@
 # query-engine-RAG
 
-A query engine that uses Retrieval Augmented Generation (RAG) to answer questions about a text.
+A query engine that uses Retrieval Augmented Generation (RAG) to assist LLMS in answering questions about a text. The RAG approach improves the performance of a LLMs by providing relevant context to a user query. This is achieved by retrieving content from a database that satisfies some similarity threshold with the query.
+
+## How the app works
+
+The user provides an input text and a query about this text to the user interface (UI). The text is read, processed, and split into sentences using the spaCy trained pipeline <en_core_web_sm>, an English pipeline trained on written web text, in order to preserve the semantics.
+
+
 
 ```mermaid
 flowchart LR
